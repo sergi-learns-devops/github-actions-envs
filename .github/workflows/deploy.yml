@@ -1,0 +1,39 @@
+name: Deployment
+on:
+  push:
+    branches:
+      - master
+      - dev
+env: #It uses to define environment variables. This environment variables will be used in all the steps in the workflow.
+  MONGODB_DB_NAME: gha-demo #The key must be the same as defined in our code.
+jobs:
+  test:
+    env: #Also, it can be possible to define environment variables only for a specific job
+      MONGODB_CLUSTER_ADDRESS:
+      MONGODB_USERNAME:
+      MONGODB_PASSWORD:
+    environment: testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-deps-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Run server
+        run: npm start & npx wait-on http://127.0.0.1:XYZ
+      - name: Run tests
+        run: npm test
+      - name: Output information
+        run: echo "..."
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information
+        run: |        
+          echo "..."
