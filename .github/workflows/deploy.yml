@@ -10,7 +10,7 @@ env: #It uses to define environment variables. This environment variables will b
   MONGODB_DB_NAME: gha-demo #The key must be the same as defined in our code.
 jobs:
   test:
-    environment: testing #Add the environment name I've just created in GitHub.
+    environment: testing #Add the environment name I've just created in GitHub
     env: #Also, it can be possible to define environment variables only for a specific job
       MONGODB_CLUSTER_ADDRESS: cluster0.ddumr.mongodb.net
       MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
