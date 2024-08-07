@@ -1,3 +1,5 @@
+#Default environments variables in GitHub.
+#Reference: https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/variables#default-environment-variables
 name: Deployment
 on:
   push:
@@ -10,8 +12,8 @@ jobs:
   test:
     env: #Also, it can be possible to define environment variables only for a specific job
       MONGODB_CLUSTER_ADDRESS: cluster0.ddumr.mongodb.net
-      MONGODB_USERNAME: sserramarques
-      MONGODB_PASSWORD: cdJzQqCqj2vNpRUh
+      MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
       PORT: 8080
     environment: testing
     runs-on: ubuntu-latest
@@ -31,12 +33,12 @@ jobs:
         run: npm test
       - name: Output information
         run: | 
-          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
+          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}" #This variable will be shown because it's an environment variable in job.
   deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Output information
         run: |        
-          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
-          echo "MONGO_DB_NAME: $MONGODB_DB_NAME"
+          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}" #This variable will be shown in blank because there aren't environment variables indicated in this job.
+          echo "MONGO_DB_NAME: $MONGODB_DB_NAME" #This variable is global. That's why is shown as an output.
