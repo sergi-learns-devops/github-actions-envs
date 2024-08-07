@@ -9,9 +9,10 @@ env: #It uses to define environment variables. This environment variables will b
 jobs:
   test:
     env: #Also, it can be possible to define environment variables only for a specific job
-      MONGODB_CLUSTER_ADDRESS:
-      MONGODB_USERNAME:
-      MONGODB_PASSWORD:
+      MONGODB_CLUSTER_ADDRESS: cluster0.ddumr.mongodb.net
+      MONGODB_USERNAME: sserramarques
+      MONGODB_PASSWORD: cdJzQqCqj2vNpRUh
+      PORT: 8080
     environment: testing
     runs-on: ubuntu-latest
     steps:
@@ -25,15 +26,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run server
-        run: npm start & npx wait-on http://127.0.0.1:XYZ
+        run: npm start & npx wait-on http://127.0.0.1:$PORT #This is the way to call an environment variable in Linux. In Windows or other system is different (check documentation)
       - name: Run tests
         run: npm test
       - name: Output information
-        run: echo "..."
+        run: echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
   deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Output information
         run: |        
-          echo "..."
+          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
+          echo "MONGO_DB_NAME: $MONGO_DB_NAME"
